@@ -17,7 +17,7 @@ import model.Picture;
  */
 public class RetrievePicturesCom {
 
-    private String request = GlobalVariables.baseUrl + "picture/getpictures";
+    private String request = GlobalVariables.baseUrl + "pictures";
 
     /**
      * Retrieves a list of Pictures from the Server
@@ -31,7 +31,7 @@ public class RetrievePicturesCom {
         URL url = new URL(request);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
-        connection.setRequestProperty("Content-Type", "application/v2+json");
+        connection.setRequestProperty("Content-Type", "application/json");
         connection.connect();
         InputStreamReader reader = new InputStreamReader(connection.getInputStream());
 
@@ -43,13 +43,20 @@ public class RetrievePicturesCom {
         return imageList;
     }
 
+    /**
+     * Retrieves a list of Pictures from the Server by Tag
+     *
+     * @param tag The tag to filter by
+     * @return An Arraylist of Picture objects.
+     * @throws IOException
+     */
     public ArrayList<Picture> getImageListByTag(String tag) throws IOException {
         ArrayList<Picture> imageList = new ArrayList();
 
         URL url = new URL(request + "/" + tag);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
-        connection.setRequestProperty("Content-Type", "application/v2+json");
+        connection.setRequestProperty("Content-Type", "application/json");
         connection.connect();
         InputStreamReader reader = new InputStreamReader(connection.getInputStream());
 
@@ -72,6 +79,7 @@ public class RetrievePicturesCom {
 
         JsonParser parser = new JsonParser();
         JsonArray imageUrlArray = parser.parse(reader).getAsJsonArray();
+        System.out.println(imageUrlArray);
 
         for (JsonElement j : imageUrlArray) {
             String largeUrl = j.getAsJsonObject().get("url").getAsString();

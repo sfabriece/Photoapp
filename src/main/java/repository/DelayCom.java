@@ -25,7 +25,7 @@ public class DelayCom {
         URL url = new URL(delayUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
-        connection.setRequestProperty("Content-Type", "application/v1+json");
+        connection.setRequestProperty("Content-Type", "application/json");
         connection.connect();
         InputStreamReader reader = new InputStreamReader(connection.getInputStream());
 
@@ -44,10 +44,10 @@ public class DelayCom {
      * @throws IOException
      */
     public int setDelay(int delay) throws IOException {
-        URL url = new URL(delayUrl + "/" + delay);
+        URL url = new URL(delayUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("PUT");
-        connection.setRequestProperty("Content-Type", "application/v1+json");
+        connection.setRequestProperty("Content-Type", "application/json");
         connection.connect();
         InputStreamReader reader = new InputStreamReader(connection.getInputStream());
 

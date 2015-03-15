@@ -13,7 +13,7 @@ import model.Picture;
  */
 public class StorePicturesCom {
 
-    private String request = GlobalVariables.baseUrl + "picture/addpictures";
+    private String request = GlobalVariables.baseUrl + "pictures";
     private DataOutputStream outStream;
 
     /**
@@ -28,7 +28,7 @@ public class StorePicturesCom {
         URL url = new URL(request);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/v2+json");
+        connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
 
         connection.connect();
@@ -38,12 +38,12 @@ public class StorePicturesCom {
         outStream = new DataOutputStream(connection.getOutputStream());
         for (int i = 0; i < pictureList.size(); i++) {
             if (i < pictureList.size() - 1) {
-                body += "{\n \"thumburl\": " + "\"" + pictureList.get(i).getThumbUrl() + "\",\n";
+                body += "{\n \"thumbUrl\": " + "\"" + pictureList.get(i).getThumbUrl() + "\",\n";
                 body += " \"url\": " + "\"" + pictureList.get(i).getLargeUrl() + "\",\n";
                 body += " \"date\": " + "\"" + pictureList.get(i).getUnixDate() + "\",\n";
                 body += " \"tag\": " + "\"" + pictureList.get(i).getTag() + "\"\n},";
             } else {
-                body += "{\n \"thumburl\": " + "\"" + pictureList.get(i).getThumbUrl() + "\",\n";
+                body += "{\n \"thumbUrl\": " + "\"" + pictureList.get(i).getThumbUrl() + "\",\n";
                 body += " \"url\": " + "\"" + pictureList.get(i).getLargeUrl() + "\",\n";
                 body += " \"date\": " + "\"" + pictureList.get(i).getUnixDate() + "\",\n";
                 body += " \"tag\": " + "\"" + pictureList.get(i).getTag() + "\"\n}";

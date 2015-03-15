@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class TagCom {
 
-    private String tagUrl = "http://pensolut.com:8084/api/tag";
+    private String tagUrl = "http://localhost:8080/tag";
 
     /**
      * Retrieves a list of tags from the server and stores them as strings in an
@@ -28,10 +28,10 @@ public class TagCom {
     public ArrayList<String> getTags() throws IOException {
         ArrayList<String> tagList = new ArrayList();
 
-        URL url = new URL(tagUrl + "/gettags");
+        URL url = new URL(tagUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
-        connection.setRequestProperty("Content-Type", "application/v2+json");
+        connection.setRequestProperty("Content-Type", "application/json");
         connection.connect();
         InputStreamReader reader = new InputStreamReader(connection.getInputStream());
 
@@ -58,10 +58,10 @@ public class TagCom {
      * @throws IOException
      */
     public int storeTag(String tag, long id) throws IOException {
-        URL url = new URL(tagUrl + "/addtag");
+        URL url = new URL(tagUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/v2+json");
+        connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
 
         connection.connect();
@@ -86,10 +86,10 @@ public class TagCom {
         if (tags.size() < 1) {
             return 0;
         }
-        URL url = new URL(tagUrl + "/delete");
+        URL url = new URL(tagUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/v2+json");
+        connection.setRequestMethod("DELETE");
+        connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
         connection.connect();
 

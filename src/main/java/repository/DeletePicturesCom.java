@@ -13,7 +13,7 @@ import model.Picture;
  */
 public class DeletePicturesCom {
 
-    private String request = GlobalVariables.baseUrl + "picture/delete";
+    private String request = GlobalVariables.baseUrl + "picture";
     private DataOutputStream outStream;
 
     /*
@@ -27,8 +27,8 @@ public class DeletePicturesCom {
         }
         URL url = new URL(request);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/v2+json");
+        connection.setRequestMethod("DELETE");
+        connection.setRequestProperty("Content-Type", "application/json");
         connection.setDoOutput(true);
         connection.connect();
 

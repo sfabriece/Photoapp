@@ -28,7 +28,7 @@ public class CheckNewDelay {
             @Override
             protected Object call() throws Exception {
                 while(loop){
-                    Thread.sleep(3000);
+                    Thread.sleep(30000);
                     int newDelay = getDelay();
                     if(newDelay != delay){
                         double diffFactor = ((double)newDelay+fadeTime)/((double)delay+fadeTime);

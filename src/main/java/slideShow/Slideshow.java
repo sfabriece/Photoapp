@@ -67,8 +67,8 @@ public class Slideshow extends Application {
         root = new StackPane();
         slideshow = new SequentialTransition();
         imageTrans = new ImageTransition();
-        imageList = new ArrayList();
-        oldImageList = new ArrayList();
+        imageList = new ArrayList<>();
+        oldImageList = new ArrayList<>();
         updatePicture = new UpdatePictureListTimer();
         pictureTimerTask = updatePicture.timerTask();
         checkNewDelay = new CheckNewDelay(imageTrans.getFadeTime() / 1000);
