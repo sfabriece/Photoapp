@@ -79,7 +79,6 @@ public class RetrievePicturesCom {
 
         JsonParser parser = new JsonParser();
         JsonArray imageUrlArray = parser.parse(reader).getAsJsonArray();
-        System.out.println(imageUrlArray);
 
         for (JsonElement j : imageUrlArray) {
             String largeUrl = j.getAsJsonObject().get("url").getAsString();

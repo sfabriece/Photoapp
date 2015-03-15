@@ -72,19 +72,9 @@ public class AddImageGUI extends GridPane {
         searchButton = new Button("Legg til");
         searchBox.getChildren().add(searchButton);
         add(searchBox, 0, 0, 2, 1);
-        searchButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                addTag();
-            }
-        });
+        searchButton.setOnAction(e -> addTag());
 
-        searchField.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                addTag();
-            }
-        });
+        searchField.setOnAction(t -> addTag());
 
         GridPane statuBox = new GridPane();
         statuBox.add(statusLabel, 0, 0);
@@ -175,19 +165,17 @@ public class AddImageGUI extends GridPane {
                 searchField.setDisable(true);
 
                 ProgressTask = logic.findPicturesTask(searchField.getText());
-                ProgressTask.setOnSucceeded(new EventHandler() {
-                    @Override
-                    public void handle(Event t) {
-                        displayPictures(selectedTag);
-                        updateTagButtons();
-                        setSelectedButton(tagButtons.size() - 1);
-                    }
+                ProgressTask.setOnSucceeded(t -> {
+                    displayPictures(selectedTag);
+                    updateTagButtons();
+                    setSelectedButton(tagButtons.size() - 1);
                 });
                 progressBar.progressProperty().unbind();
                 progressBar.progressProperty().bind(ProgressTask.progressProperty());
                 ProgressTask.messageProperty().addListener(new ChangeListener<String>() {
                     @Override
                     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                        System.out.println("newVal: " + newValue);
                         if (ProgressTask.isDone()) {
                             searchButton.setDisable(false);
                             searchField.setDisable(false);

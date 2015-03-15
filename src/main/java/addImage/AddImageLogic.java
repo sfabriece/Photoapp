@@ -14,6 +14,7 @@ import com.google.gson.JsonPrimitive;
 import javafx.concurrent.Task;
 import repository.AuthenticationTwitter;
 import repository.StorePicturesCom;
+import repository.TagCom;
 
 /**
  *
@@ -59,9 +60,11 @@ public class AddImageLogic {
             failedMsg = "Ugyldig tag";
         }
         bearerToken = Auth.requestBearerToken();
-        instagramPicFound = getSizeAndAdd(instaGetter.findPictures(instaUrl), "Instagram");
+        JsonArray instArray = instaGetter.findPictures(instaUrl);
+        instagramPicFound = getSizeAndAdd(instArray, "Instagram");
         if (bearerToken != null) {
-            twitterPicFound = getSizeAndAdd(twitterGetter.findPictures(twitterUrl, bearerToken), "Twitter");
+            JsonArray twitArray = twitterGetter.findPictures(twitterUrl, bearerToken);
+            twitterPicFound = getSizeAndAdd(twitArray, "Twitter");
         }
         minTagID = instaGetter.getMinID();
         picturesFound = getMore();
@@ -150,7 +153,7 @@ public class AddImageLogic {
      * @return boolean
      * @throws IOException
      */
-    private boolean exportList() throws IOException {
+    private boolean sendListToServer() throws IOException {
         StorePicturesCom store = new StorePicturesCom();
         if (store.storePictures(pictureList) != 200) {
             jsonArrayList.clear();
@@ -163,6 +166,13 @@ public class AddImageLogic {
         }
     }
 
+    /*private boolean sendTagToServer(String tag) {
+        TagCom tagCom = new TagCom();
+        if (tagCom.storeTag(tag, minTagID) != 200){
+
+        }
+        return false;
+    }*/
     /**
      * Takes a tag, starts a new task which finds pictures from Instagram and
      * Twitter, and updates GUI.
@@ -199,7 +209,11 @@ public class AddImageLogic {
                         }
                     }
 
-                    if (!exportList()) {
+                    /*if(sendTagToServer()){
+
+                    }*/
+                    System.out.println("attempting save");
+                    if (!sendListToServer()) {
                         AddImageGUI.addingToList = false;
                         failedMsg = "Klarte ikke legge bilder inn pÃ¥ server";
                         failed();

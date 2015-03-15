@@ -16,7 +16,8 @@ import java.util.ArrayList;
  */
 public class TagCom {
 
-    private String tagUrl = "http://localhost:8080/tag";
+    //private String tagUrl = "http://localhost:8080/tags";
+    private String tagUrl = GlobalVariables.baseUrl + "tags";
 
     /**
      * Retrieves a list of tags from the server and stores them as strings in an

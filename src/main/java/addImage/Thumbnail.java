@@ -1,5 +1,6 @@
 package addImage;
 
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -38,7 +39,9 @@ public class Thumbnail extends StackPane {
             @Override
             public void run() {
                 image = new Image(picture.getThumbUrl());
-                imageView.setImage(image);
+                Platform.runLater(() -> {
+                    imageView.setImage(image);
+                });
                 loaded = true;
             }
         }).start();
