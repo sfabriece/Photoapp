@@ -47,6 +47,7 @@ public class TagCom {
                 tagList.add(tag);
             }
         }
+        reader.close();
         return tagList;
     }
 
@@ -69,11 +70,11 @@ public class TagCom {
 
         DataOutputStream outStream;
         outStream = new DataOutputStream(connection.getOutputStream());
-        outStream.writeBytes("{\"name\": " + "\"" + tag + "\",\"min_id\": " + id + "}");
+        outStream.writeBytes("[{\"name\": " + "\"" + tag + "\",\"min_id\": " + id + "}]");
         outStream.flush();
         outStream.close();
-
-        return connection.getResponseCode();
+        final int responseCode = connection.getResponseCode();
+        return responseCode;
     }
 
     /**
@@ -109,6 +110,13 @@ public class TagCom {
         outStream.writeBytes(body);
         outStream.flush();
         outStream.close();
-        return connection.getResponseCode();
+        final int responseCode = connection.getResponseCode();
+        return responseCode;
+    }
+
+    public void removeTag(String tag) throws IOException {
+        ArrayList<String> tags = new ArrayList<>(1);
+        tags.add(tag);
+        removeTag(tags);
     }
 }

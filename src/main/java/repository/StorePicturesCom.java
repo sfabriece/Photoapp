@@ -55,7 +55,8 @@ public class StorePicturesCom {
         outStream.writeBytes(body);
         outStream.flush();
         outStream.close();
+        final int responseCode = connection.getResponseCode();
 
-        return connection.getResponseCode();
+        return responseCode;
     }
 }

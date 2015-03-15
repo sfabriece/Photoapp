@@ -1,5 +1,6 @@
 package removeImage;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -69,8 +70,6 @@ public class SelectableThumbnail extends StackPane {
 
     /**
      * Method for loading the Image from a given url
-     *
-     * @param pic
      */
     public void loadImage() {
         if (!loaded) {
@@ -79,7 +78,9 @@ public class SelectableThumbnail extends StackPane {
                 @Override
                 public void run() {
                     image = new Image(picture.getThumbUrl());
-                    imageView.setImage(image);
+                    Platform.runLater(() -> {
+                        imageView.setImage(image);
+                    });
                     loaded = true;
                 }
             }).start();

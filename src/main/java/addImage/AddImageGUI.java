@@ -181,11 +181,11 @@ public class AddImageGUI extends GridPane {
                             searchField.setDisable(false);
                             String tag = searchField.getText();
                             if (Pattern.matches("[\\wÆØÅæøå]+", tag)) {
-                                try {
+                                /*try {
                                     tagCom.storeTag(searchField.getText(), minTagID);
                                 } catch (IOException ex) {
                                     Logger.getLogger(AddImageGUI.class.getName()).log(Level.SEVERE, null, ex);
-                                }
+                                }*/
                                 updateTagButtons();
                             }                           
                             searchField.setText("");
@@ -195,9 +195,9 @@ public class AddImageGUI extends GridPane {
                             searchField.setDisable(false);
                         }
                         if (addingToList) {
-                            if (Pattern.matches("[0-9]+", newValue)) {
+                            /*if (Pattern.matches("[0-9]+", newValue)) {
                                 minTagID = Long.parseLong(newValue, 10);
-                            }
+                            }*/
                         } else {
                             setStatusText(newValue);
                         }

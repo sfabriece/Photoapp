@@ -3,6 +3,7 @@ package addImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import model.Picture;
 import imageGetters.*;
@@ -24,25 +25,24 @@ public class AddImageLogic {
 
     private ArrayList<Picture> pictureList = new ArrayList<>();
     private List<JsonArray> jsonArrayList = new ArrayList<>();
-    private InstagramGetter instaGetter = null;
-    private InstagramParser instaParser = null;
-    private TwitterGetter twitterGetter = null;
-    private TwitterParser twitterParser = null;
-    private AuthenticationTwitter Auth = null;
+    private InstagramGetter instaGetter;
+    private InstagramParser instaParser;
+    private TwitterGetter twitterGetter;
+    private TwitterParser twitterParser;
+    private TagCom tagCom;
+    private StorePicturesCom store;
+    private AuthenticationTwitter Auth;
     public String failedMsg = "Fant ingen bilder";
     private String tag = null;
     private int picturesFound = 0;
     private int twitterPicFound = 0;
     private int instagramPicFound = 0;
-    private JsonPrimitive fromSource = null;
+    private JsonPrimitive fromSource ;
     private final int pictureLimit = 100;
     private int picCountTmp = 0;
     private String minTagID = null;
     String bearerToken = null;
-
-    public String getMinTagID() {
-        return minTagID;
-    }
+    private boolean failed;
 
     /**
      * Takes a tag, finds pictures from Instagram and Twitter, returns amount of
@@ -77,6 +77,8 @@ public class AddImageLogic {
         twitterGetter = new TwitterGetter();
         twitterParser = new TwitterParser();
         Auth = new AuthenticationTwitter();
+        store = new StorePicturesCom();
+        tagCom = new TagCom();
     }
 
     /**
@@ -153,17 +155,31 @@ public class AddImageLogic {
      * @return boolean
      * @throws IOException
      */
-    private boolean sendListToServer() throws IOException {
-        StorePicturesCom store = new StorePicturesCom();
-        if (store.storePictures(pictureList) != 200) {
+    private boolean sendListAndTagToServer() throws IOException {
+        if (failed){
+            return false;
+        }
+        long minID = -1;
+        if (Pattern.matches("[0-9]+", minTagID)) {
+            minID = Long.parseLong(minTagID, 10);
+        }
+        if (tagCom.storeTag(tag, minID) == 200){
+            if (store.storePictures(pictureList) == 200) {
+                jsonArrayList.clear();
+                pictureList.clear();
+                return true;
+            } else {
+                tagCom.removeTag(tag);
+                jsonArrayList.clear();
+                pictureList.clear();
+                return false;
+            }
+        }else{
             jsonArrayList.clear();
             pictureList.clear();
             return false;
-        } else {
-            jsonArrayList.clear();
-            pictureList.clear();
-            return true;
         }
+
     }
 
     /*private boolean sendTagToServer(String tag) {
@@ -186,7 +202,7 @@ public class AddImageLogic {
             @Override
             protected Object call() throws Exception {
                 int size = getPictures(tag);
-                updateMessage(getMinTagID());
+                updateMessage(minTagID);
                 if (size > pictureLimit) {
                     int tmp = size - pictureLimit;
                     size = size - tmp;
@@ -209,19 +225,16 @@ public class AddImageLogic {
                         }
                     }
 
-                    /*if(sendTagToServer()){
-
-                    }*/
                     System.out.println("attempting save");
-                    if (!sendListToServer()) {
+                    if (sendListAndTagToServer()) {
+                        picturesFound = 0;
+                        AddImageGUI.addingToList = false;
+                        return true;
+                    } else {
                         AddImageGUI.addingToList = false;
                         failedMsg = "Klarte ikke legge bilder inn pÃ¥ server";
                         failed();
                         return false;
-                    } else {
-                        picturesFound = 0;
-                        AddImageGUI.addingToList = false;
-                        return true;
                     }
                 } else {
                     AddImageGUI.addingToList = false;
@@ -246,9 +259,15 @@ public class AddImageLogic {
             @Override
             protected void failed() {
                 super.failed();
+                failed = true;
                 picturesFound = 0;
                 jsonArrayList.clear();
                 pictureList.clear();
+                try {
+                    tagCom.removeTag(tag);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 updateMessage(failedMsg);
                 updateProgress(0, 0);
             }

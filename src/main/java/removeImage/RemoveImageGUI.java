@@ -65,43 +65,34 @@ public class RemoveImageGUI extends GridPane {
         Button unmark = new Button("Avmerk alle");
         Button delete = new Button("Slett merkede");
 
-        mark.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                for (SelectableThumbnail thumbnail : thumbnails) {
-                    thumbnail.setSelected(true);
-                }
+        mark.setOnAction(t -> {
+            for (SelectableThumbnail thumbnail : thumbnails) {
+                thumbnail.setSelected(true);
             }
         });
-        unmark.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                for (SelectableThumbnail thumbnail : thumbnails) {
-                    thumbnail.setSelected(false);
-                }
+        unmark.setOnAction(t -> {
+            for (SelectableThumbnail thumbnail : thumbnails) {
+                thumbnail.setSelected(false);
             }
         });
-        delete.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                DeletePicturesCom delCom = new DeletePicturesCom();
-                try {
-                    delCom.deletePictures(lister.ListSelectedThumbnails());
-                } catch (IOException ex) {
-                    Logger.getLogger(RemoveImageGUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                ArrayList<SelectableThumbnail> selected = new ArrayList();
-                for (SelectableThumbnail thumbnail : thumbnails) {
-                    if (thumbnail.isSelected()) {
-                        selected.add(thumbnail);
-                    }
-                }
-                for (SelectableThumbnail thumb : selected) {
-                    images.remove(thumb.getPicture());
-                }
-                thumbnails.removeAll(selected);
-                updateGrid();
+        delete.setOnAction(t -> {
+            DeletePicturesCom delCom = new DeletePicturesCom();
+            try {
+                delCom.deletePictures(lister.ListSelectedThumbnails());
+            } catch (IOException ex) {
+                Logger.getLogger(RemoveImageGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
+            ArrayList<SelectableThumbnail> selected = new ArrayList();
+            for (SelectableThumbnail thumbnail : thumbnails) {
+                if (thumbnail.isSelected()) {
+                    selected.add(thumbnail);
+                }
+            }
+            for (SelectableThumbnail thumb : selected) {
+                images.remove(thumb.getPicture());
+            }
+            thumbnails.removeAll(selected);
+            updateGrid();
         });
 
         HBox markBox = new HBox(gap);

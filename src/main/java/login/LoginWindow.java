@@ -86,33 +86,25 @@ public class LoginWindow {
         /*
          * Clicking the cancel button
          */
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                stage.close();
-            }
-        });
+        btn.setOnAction(event -> stage.close());
         /*
          * Pressing "enter" in the textfield
          * Checking if the submitted password is equal to the one in LoginLogic
          * If it succeedes the menu stage is generated
          */
-        txtBox.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                if (LoginLogic.checkLogin(txtBox.getText())) {
-                    Menu menu;
-                    try {
-                        menu = new Menu();
-                        menu.generateStage();
-                    } catch (IOException ex) {
-                        Logger.getLogger(LoginWindow.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    stage.close();
-                } else {
-                    denied.setVisible(true);
-                    txtBox.setText("");
+        txtBox.setOnAction(t -> {
+            if (LoginLogic.checkLogin(txtBox.getText())) {
+                Menu menu;
+                try {
+                    menu = new Menu();
+                    menu.generateStage();
+                } catch (IOException ex) {
+                    Logger.getLogger(LoginWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                stage.close();
+            } else {
+                denied.setVisible(true);
+                txtBox.setText("");
             }
         });
     }

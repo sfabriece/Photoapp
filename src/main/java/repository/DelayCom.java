@@ -1,5 +1,6 @@
 package repository;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -48,13 +49,31 @@ public class DelayCom {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("PUT");
         connection.setRequestProperty("Content-Type", "application/json");
+        connection.setDoOutput(true);
+
         connection.connect();
+
+        DataOutputStream outStream;
+        outStream = new DataOutputStream(connection.getOutputStream());
+        outStream.writeBytes("{\"time\": " + delay + "}");
+        outStream.flush();
+        //outStream.close();
+
         InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+
+        int response = connection.getResponseCode();
+        int delayRes = 30;
+        if (response == 200) {
+            JsonParser parser = new JsonParser();
+            delayRes = parser.parse(reader).getAsJsonObject().get("time").getAsInt();
+        }
+        /*InputStreamReader reader = new InputStreamReader(connection.getInputStream());
 
         JsonParser parser = new JsonParser();
         JsonObject obj = parser.parse(reader).getAsJsonObject();
-        int response = obj.get("time").getAsInt();
+        int response = obj.get("time").getAsInt();*/
 
-        return response;
+
+        return delayRes;
     }
 }

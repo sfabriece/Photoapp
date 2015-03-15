@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.PictureList;
 import removeImage.RemoveImageGUI;
+import repository.GlobalVariables;
 import slideShow.Slideshow;
 
 public class Menu {
@@ -39,6 +40,7 @@ public class Menu {
     private AddImageGUI addImagePane;
     private RemoveImageGUI removeImagePane;
     private static PictureList pictureList;
+    private static boolean behandleActive = true;
 
     public Menu() throws IOException {
         pictureList = new PictureList();
@@ -119,6 +121,14 @@ public class Menu {
             }
         });
 
+        if (behandleActive){
+            buttons.get(0).arm();
+            buttons.get(0).fire();
+        }else {
+            buttons.get(1).arm();
+            buttons.get(1).fire();
+        }
+
     }
 
     //Builds the side panel
@@ -152,25 +162,31 @@ public class Menu {
 
     //The buttons for different activities
     private void makeButtons() {
+
         Button btnSearch = new Button("Behandle Tags");
-        btnSearch.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    addImagePane = new AddImageGUI();
-                } catch (IOException ex) {
-                    Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                setActivityPane(addImagePane);
-            }
-        });
         Button btnDelete = new Button("Slette Bilder");
-        btnDelete.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                removeImagePane.update();
-                setActivityPane(removeImagePane);
+
+        btnSearch.setOnAction(event -> {
+            try {
+                System.out.println("search fire");
+                btnSearch.setDisable(true);
+                btnDelete.setDisable(false);
+                behandleActive = true;
+                addImagePane = new AddImageGUI();
+
+            } catch (IOException ex) {
+                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
             }
+            setActivityPane(addImagePane);
+        });
+
+        btnDelete.setOnAction(event -> {
+            System.out.println("delete fire");
+            btnDelete.setDisable(true);
+            btnSearch.setDisable(false);
+            behandleActive = false;
+            removeImagePane.update();
+            setActivityPane(removeImagePane);
         });
         buttons.add(btnSearch);
         buttons.add(btnDelete);

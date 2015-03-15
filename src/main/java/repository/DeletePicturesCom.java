@@ -13,7 +13,7 @@ import model.Picture;
  */
 public class DeletePicturesCom {
 
-    private String request = GlobalVariables.baseUrl + "picture";
+    private String request = GlobalVariables.baseUrl + "pictures";
     private DataOutputStream outStream;
 
     /*
@@ -46,6 +46,7 @@ public class DeletePicturesCom {
         outStream.writeBytes(body);
         outStream.flush();
         outStream.close();
-        return connection.getResponseCode();
+        final int responseCode = connection.getResponseCode();
+        return responseCode;
     }
 }
